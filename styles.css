@@ -1,0 +1,325 @@
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  overflow: hidden;
+  background: #000;
+  width: 100vw;
+  height: 100vh;
+  font-family: "Arial Rounded MT Bold", Arial, sans-serif;
+}
+
+/* ==========================
+   BOTÓN QUIZ
+========================== */
+
+#btn-quiz {
+  position: fixed;
+  bottom: 24px;
+  right: 20px;
+  z-index: 100;
+
+  width: 68px;
+  height: 68px;
+
+  background: #4f9959;
+  color: white;
+
+  border: none;
+  border-radius: 50%;
+
+  cursor: pointer;
+
+  box-shadow: 0 5px 0 #3f7b47;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+
+  gap: 2px;
+
+  transition:
+    transform 0.15s,
+    box-shadow 0.15s;
+}
+
+#btn-quiz:active {
+  transform: translateY(4px);
+  box-shadow: 0 1px 0 #3f7b47;
+}
+
+.btn-icon {
+  font-size: 26px;
+  line-height: 1;
+}
+
+.btn-label {
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+}
+
+/* ==========================
+   PANEL QUIZ
+========================== */
+
+#quiz-panel {
+  position: fixed;
+
+  bottom: 0;
+  left: 0;
+  right: 0;
+
+  z-index: 200;
+
+  background: #f7fcf8;
+
+  border-radius: 24px 24px 0 0;
+
+  border-top: 4px solid #4f9959;
+
+  padding: 14px 20px 28px;
+
+  transform: translateY(100%);
+
+  transition:
+    transform 0.38s cubic-bezier(0.34, 1.56, 0.64, 1);
+
+  max-width: 480px;
+
+  margin: 0 auto;
+}
+
+#quiz-panel.open {
+  transform: translateY(0);
+}
+
+.quiz-handle {
+  width: 38px;
+  height: 5px;
+
+  background: #b7dcbf;
+
+  border-radius: 3px;
+
+  margin: 0 auto 14px;
+}
+
+.stars-row {
+  display: flex;
+  justify-content: center;
+  gap: 6px;
+
+  font-size: 14px;
+
+  margin-bottom: 10px;
+}
+
+/* ==========================
+   TÍTULOS
+========================== */
+
+#question-title {
+  font-size: 20px;
+  font-weight: 700;
+
+  color: #2d2d2d;
+
+  text-align: center;
+
+  margin-bottom: 4px;
+}
+
+.subtitle {
+  font-size: 13px;
+  color: #6f6f6f;
+
+  text-align: center;
+
+  margin-bottom: 16px;
+}
+
+/* ==========================
+   OPCIONES
+========================== */
+
+.quiz-options {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.option {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+
+  padding: 13px 16px;
+
+  border-radius: 14px;
+
+  border: 2.5px solid #d9eadc;
+
+  background: white;
+
+  cursor: pointer;
+
+  font-size: 15px;
+  font-weight: 600;
+
+  color: #333;
+
+  text-align: left;
+
+  transition:
+    background 0.2s,
+    border-color 0.2s,
+    transform 0.15s;
+}
+
+.option:hover {
+  background: #eef8f0;
+  border-color: #4f9959;
+}
+
+.option:active {
+  transform: scale(0.98);
+}
+
+.opt-icon {
+  width: 38px;
+  height: 38px;
+
+  border-radius: 10px;
+
+  background: #eef8f0;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  font-size: 22px;
+
+  flex-shrink: 0;
+}
+
+/* ==========================
+   RESPUESTA CORRECTA
+========================== */
+
+.option.correct {
+  background: #e6f7ed;
+  border-color: #27ae60;
+  color: #1a6e3c;
+}
+
+.option.correct .opt-icon {
+  background: #c8f0d8;
+}
+
+/* ==========================
+   RESPUESTA INCORRECTA
+========================== */
+
+.option.wrong {
+  background: #fde8e8;
+  border-color: #e74c3c;
+  color: #8b1a1a;
+}
+
+.option.wrong .opt-icon {
+  background: #fad0d0;
+}
+
+.option.disabled {
+  pointer-events: none;
+  opacity: 0.7;
+}
+
+/* ==========================
+   BOTÓN CERRAR
+========================== */
+
+.btn-close {
+  margin-top: 14px;
+
+  width: 100%;
+
+  padding: 13px;
+
+  background: #4f9959;
+  color: white;
+
+  border: none;
+
+  border-radius: 14px;
+
+  font-size: 15px;
+  font-weight: 700;
+
+  cursor: pointer;
+
+  transition: background 0.2s;
+}
+
+.btn-close:hover {
+  background: #3f7b47;
+}
+
+/* ==========================
+   MÓVILES
+========================== */
+
+@media (max-width: 480px) {
+  #btn-quiz {
+    width: 64px;
+    height: 64px;
+
+    bottom: 18px;
+    right: 16px;
+  }
+
+  #question-title {
+    font-size: 18px;
+  }
+
+  .option {
+    font-size: 14px;
+  }
+
+  .opt-icon {
+    width: 34px;
+    height: 34px;
+    font-size: 20px;
+  }
+}
+
+/* ==========================
+   TELÉFONOS PEQUEÑOS
+========================== */
+
+@media (max-width: 360px) {
+  #btn-quiz {
+    width: 58px;
+    height: 58px;
+  }
+
+  #question-title {
+    font-size: 16px;
+  }
+
+  .subtitle {
+    font-size: 12px;
+  }
+
+  .option {
+    font-size: 13px;
+    padding: 12px;
+  }
+}
+
