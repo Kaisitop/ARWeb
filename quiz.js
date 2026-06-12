@@ -18,7 +18,8 @@ function activarAudioSistema() {
 
   audios.forEach((audio) => {
     audio.muted = false;
-    audio.play()
+    audio
+      .play()
       .then(() => {
         audio.pause();
         audio.currentTime = 0;
@@ -54,8 +55,9 @@ const preguntas = [
     titulo: "¿Qué le ayuda a crecer a una planta?",
     subtitulo: "Para que crezca sana y feliz 🌱",
     opciones: [
-      { texto: "Agua limpia", icono: "💧", correcta: true },
-      { texto: "Refresco u otro líquido", icono: "🥤", correcta: false },
+      { texto: "Agua y luz solar", icono: "💧☀️", correcta: true },
+      { texto: "Humo", icono: "🌫️", correcta: false },
+      { texto: "Arena", icono: "🏜️", correcta: false },
     ],
   },
 
@@ -120,11 +122,9 @@ function cerrarPanel() {
 function cargarPregunta() {
   const pregunta = preguntas[preguntaActual];
 
-  document.getElementById("question-title").textContent =
-    pregunta.titulo;
+  document.getElementById("question-title").textContent = pregunta.titulo;
 
-  document.getElementById("question-subtitle").textContent =
-    pregunta.subtitulo;
+  document.getElementById("question-subtitle").textContent = pregunta.subtitulo;
 
   const contenedor = document.getElementById("quiz-options");
   contenedor.innerHTML = "";
@@ -168,12 +168,10 @@ function responder(boton, correcta) {
     puntaje++;
 
     boton.className = "option correct";
-    boton.innerHTML =
-      '<span class="opt-icon">✅</span> 🎉 ¡Correcto!';
+    boton.innerHTML = '<span class="opt-icon">✅</span> 🎉 ¡Correcto!';
   } else {
     boton.className = "option wrong";
-    boton.innerHTML =
-      '<span class="opt-icon">❌</span> 🌱 Incorrecto';
+    boton.innerHTML = '<span class="opt-icon">❌</span> 🌱 Incorrecto';
   }
 
   setTimeout(() => {
@@ -192,8 +190,7 @@ function responder(boton, correcta) {
 ========================== */
 
 function mostrarResultado() {
-  document.getElementById("question-title").textContent =
-    "🏁 Resultado final";
+  document.getElementById("question-title").textContent = "🏁 Resultado final";
 
   document.getElementById("question-subtitle").textContent =
     `Obtuviste ${puntaje} / ${preguntas.length}`;
