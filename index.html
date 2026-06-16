@@ -1,84 +1,171 @@
-
 <!doctype html>
 <html lang="es">
-  <head>
-    <meta charset="UTF-8" />
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" />
+  <title>ChildAR — Tarjetas de Realidad Aumentada</title>
+  <meta name="description" content="Tarjetas educativas de Realidad Aumentada para niños. Aprende jugando con 10 temáticas interactivas." />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet" />
+  <script src="js/data.js"></script>
+  <style>
+    body { font-family: 'Nunito', sans-serif; }
 
-    <meta
-      name="viewport"
-      content="width=device-width, initial-scale=1.0, user-scalable=no"
-    />
+    /* Fondo animado con burbujas */
+    .bubble {
+      position: absolute;
+      border-radius: 50%;
+      opacity: 0.15;
+      animation: float linear infinite;
+    }
+    @keyframes float {
+      0%   { transform: translateY(0) scale(1); opacity: 0.12; }
+      50%  { transform: translateY(-40px) scale(1.05); opacity: 0.18; }
+      100% { transform: translateY(0) scale(1); opacity: 0.12; }
+    }
 
-    <title>WebAr</title>
+    /* Card hover */
+    .theme-card {
+      transition: transform 0.22s cubic-bezier(.34,1.56,.64,1), box-shadow 0.22s ease;
+    }
+    .theme-card:hover {
+      transform: translateY(-6px) scale(1.03);
+    }
+    .theme-card:active {
+      transform: translateY(2px) scale(0.98);
+    }
 
-    <script src="https://aframe.io/releases/1.6.0/aframe.min.js"></script>
-    <script src="https://raw.githack.com/AR-js-org/AR.js/master/aframe/build/aframe-ar.js"></script>
+    /* Shine en hover */
+    .theme-card::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      border-radius: inherit;
+      background: linear-gradient(135deg, rgba(255,255,255,0.25) 0%, transparent 60%);
+      pointer-events: none;
+      opacity: 0;
+      transition: opacity 0.2s;
+    }
+    .theme-card:hover::after { opacity: 1; }
 
-    <link rel="stylesheet" href="styles.css" />
-  </head>
+    /* Badge "AR" pulsante */
+    @keyframes pulse-badge {
+      0%, 100% { box-shadow: 0 0 0 0 rgba(255,255,255,0.5); }
+      50%       { box-shadow: 0 0 0 6px rgba(255,255,255,0); }
+    }
+    .badge-ar { animation: pulse-badge 2s ease-in-out infinite; }
 
-  <body>
-    <a-scene
-      embedded
-      vr-mode-ui="enabled:false"
-      renderer="alpha:true; antialias:true;"
-      arjs="sourceType:webcam;"
-    >
-      <a-assets>
-        <video
-          id="goku"
-          autoplay
-          loop
-          muted
-          playsinline
-          webkit-playsinline
-          crossorigin="anonymous"
-        ></video>
-      </a-assets>
+    /* Scroll suave */
+    html { scroll-behavior: smooth; }
+  </style>
+</head>
+<body class="min-h-screen bg-gradient-to-br from-slate-900 via-indigo-950 to-slate-900 text-white overflow-x-hidden">
 
-      <a-marker preset="hiro">
-        <a-plane
-          src="#goku"
-          width="2"
-          height="2"
-          rotation="-90 0 0"
-          position="0 0 0"
-          material="transparent:true;"
-        >
-        </a-plane>
-      </a-marker>
+  <!-- Burbujas decorativas de fondo -->
+  <div aria-hidden="true" id="bubbles" class="fixed inset-0 pointer-events-none overflow-hidden z-0"></div>
 
-      <a-entity camera></a-entity>
-    </a-scene>
+  <!-- ============ HEADER ============ -->
+  <header class="relative z-10 pt-10 pb-4 text-center px-6">
 
-    <!-- BOTON QUIZ -->
-
-    <button id="btn-quiz" onclick="abrirPanel()">
-      <span class="btn-icon">🌱</span>
-      <span class="btn-label">QUIZ</span>
-    </button>
-
-    <!-- PANEL -->
-
-    <div id="quiz-panel">
-      <div class="quiz-handle"></div>
-
-      <div class="stars-row">
-        <span>⭐</span>
-        <span>🌱</span>
-        <span>⭐</span>
-      </div>
-
-      <h2 id="question-title"></h2>
-
-      <p id="question-subtitle" class="subtitle"></p>
-
-      <div id="quiz-options" class="quiz-options"></div>
-
-      <button class="btn-close" onclick="cerrarPanel()">Cerrar ✕</button>
+    <!-- Logo / Badge -->
+    <div class="inline-flex items-center gap-2 bg-white/10 backdrop-blur-md border border-white/20 rounded-full px-4 py-1.5 mb-6 shadow-lg">
+      <span class="text-base">🪄</span>
+      <span class="text-xs font-700 tracking-widest uppercase text-white/80">Realidad Aumentada Educativa</span>
     </div>
-    <script src="video.js"></script>
-    <script src="quiz.js"></script>
-  </body>
-</html>
 
+    <!-- Título principal -->
+    <h1 class="text-5xl sm:text-6xl font-900 leading-tight tracking-tight">
+      Child<span class="text-transparent bg-clip-text bg-gradient-to-r from-violet-400 to-cyan-400">AR</span>
+    </h1>
+
+    <p class="mt-3 text-base sm:text-lg text-white/60 max-w-sm mx-auto leading-relaxed">
+      Aprendizaje interactivo con tarjetas en<br/>
+      <span class="text-white/90 font-700">Realidad Aumentada</span>
+    </p>
+
+    <!-- Stats decorativos -->
+    <div class="flex items-center justify-center gap-6 mt-6">
+      <div class="text-center">
+        <p class="text-2xl font-900 text-white">10</p>
+        <p class="text-xs text-white/50 font-600 uppercase tracking-wider">Temáticas</p>
+      </div>
+      <div class="w-px h-8 bg-white/20"></div>
+      <div class="text-center">
+        <p class="text-2xl font-900 text-white">30</p>
+        <p class="text-xs text-white/50 font-600 uppercase tracking-wider">Preguntas</p>
+      </div>
+      <div class="w-px h-8 bg-white/20"></div>
+      <div class="text-center">
+        <p class="text-2xl font-900 text-white">AR</p>
+        <p class="text-xs text-white/50 font-600 uppercase tracking-wider">Inmersivo</p>
+      </div>
+    </div>
+  </header>
+
+  <!-- ============ SECCIÓN DE TARJETAS ============ -->
+  <main class="relative z-10 px-4 pb-16 mt-8">
+    <p class="text-center text-sm text-white/40 font-600 uppercase tracking-widest mb-6">Elige una categoría para comenzar</p>
+
+    <div id="menu-grid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4 max-w-2xl mx-auto">
+      <!-- Generado dinámicamente -->
+    </div>
+  </main>
+
+  <!-- ============ FOOTER ============ -->
+  <footer class="relative z-10 text-center pb-8 text-white/25 text-xs font-600">
+    Apunta la cámara al marcador Hiro para activar la AR ✦
+  </footer>
+
+  <!-- ============ SCRIPTS ============ -->
+  <script>
+    // ---- Burbujas de fondo ----
+    const bubblesContainer = document.getElementById('bubbles');
+    const bubbleColors = ['#818cf8','#38bdf8','#a78bfa','#34d399','#f472b6','#fbbf24'];
+    for (let i = 0; i < 14; i++) {
+      const b = document.createElement('div');
+      const size = 60 + Math.random() * 160;
+      b.className = 'bubble';
+      b.style.cssText = `
+        width:${size}px; height:${size}px;
+        left:${Math.random()*100}%; top:${Math.random()*100}%;
+        background:${bubbleColors[Math.floor(Math.random()*bubbleColors.length)]};
+        animation-duration:${6+Math.random()*8}s;
+        animation-delay:${Math.random()*6}s;
+      `;
+      bubblesContainer.appendChild(b);
+    }
+
+    // ---- Generar tarjetas ----
+    const grid = document.getElementById('menu-grid');
+
+    Object.values(themesData).forEach(theme => {
+      // Darken the color slightly for the bottom shadow
+      const card = document.createElement('a');
+      card.href = `ar.html?tema=${theme.id}`;
+      card.id = `card-tema-${theme.id}`;
+      card.className = 'theme-card relative flex flex-col items-center justify-center gap-3 rounded-3xl p-5 no-underline cursor-pointer overflow-hidden';
+      card.style.background = `linear-gradient(145deg, ${theme.color}dd, ${theme.color}99)`;
+      card.style.boxShadow = `0 8px 0 ${theme.color}66, 0 12px 30px ${theme.color}44`;
+      card.style.border = `1.5px solid ${theme.color}88`;
+
+      card.innerHTML = `
+        <!-- Badge AR -->
+        <span class="badge-ar absolute top-2.5 right-2.5 bg-white/25 backdrop-blur-sm text-white text-[9px] font-800 px-1.5 py-0.5 rounded-full uppercase tracking-widest">AR</span>
+
+        <!-- Icono -->
+        <span style="font-size:2.6rem; line-height:1; filter: drop-shadow(0 2px 6px rgba(0,0,0,0.3));">${theme.icon}</span>
+
+        <!-- Nombre -->
+        <span class="text-white font-800 text-sm text-center leading-tight" style="text-shadow:0 1px 4px rgba(0,0,0,0.3);">${theme.title}</span>
+
+        <!-- Número de categoría -->
+        <span class="bg-black/20 text-white/70 text-[10px] font-700 px-2 py-0.5 rounded-full">#${theme.id}</span>
+      `;
+
+      grid.appendChild(card);
+    });
+  </script>
+</body>
+</html>
